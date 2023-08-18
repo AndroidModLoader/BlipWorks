@@ -7,10 +7,8 @@
 ISAUtils* sautils = nullptr;
 
 #ifdef AML32
-    #include "GTASA_STRUCTS.h"
     #define BYVER(__for32, __for64) (__for32)
 #else
-    #include "GTASA_STRUCTS_210.h"
     #define BYVER(__for32, __for64) (__for64)
     #define PAGED_ADDRESS(__addr) ((uintptr_t)__addr & 0xFFFFFFFFFFFFF000)
 #endif
