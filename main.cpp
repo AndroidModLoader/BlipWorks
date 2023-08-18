@@ -262,6 +262,11 @@ extern "C" void OnModLoad()
     {
         eTypeOfSettings settingTab = sautils->AddSettingsTab("BlipWorks");
 
+#ifdef AML64
+        // A fix for accidental glitch introduced in 1.5.1 for 64-bit version... damn.
+        if(!aml->HasModOfBiggerVersion("net.rusjj.gtasa.utils", "1.5.1")) *(unsigned char*)&settingTab += 1;
+#endif
+
         sautils->AddSliderItem(settingTab, "Radar Icon Scale", (int)(pCfgMapBlipScale->GetFloat() * 100), 10, 200, BSChanged1, SettingGetTextFormatted);
         sautils->AddSliderItem(settingTab, "Rotating Icon Scale", (int)(pCfgRotBlipScale->GetFloat() * 100), 10, 200, BSChanged2, SettingGetTextFormatted);
         sautils->AddSliderItem(settingTab, "Trace Icon Scale", (int)(pCfgTraceBlipScale->GetFloat() * 100), 10, 200, BSChanged3, SettingGetTextFormatted);
