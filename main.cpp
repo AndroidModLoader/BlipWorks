@@ -14,7 +14,7 @@ ISAUtils* sautils = nullptr;
 #endif
 #define sizeofA(__aVar)  ((int)(sizeof(__aVar)/sizeof(__aVar[0])))
 
-MYMODCFG(net.rusjj.blipworks, BlipWorks, 1.2, RusJJ)
+MYMODCFG(net.rusjj.blipworks, BlipWorks, 1.3, RusJJ)
 NEEDGAME(com.rockstargames.gtasa)
 
 // Savings
@@ -156,7 +156,7 @@ __attribute__((optnone)) __attribute__((naked)) void DrawRotRadarSprite_Inject(v
 __attribute__((optnone)) __attribute__((naked)) void DrawTraceRadarSprite_Inject(void)
 {
     asm volatile("LDP S0, S1, [X8,#0x2C]\nLDP S2, S3, [X8,#0x34]");
-    asm volatile("FMOV S3, %w0" :: "r" (tracerBlipsScale));
+    asm volatile("FMOV S4, %w0" :: "r" (tracerBlipsScale));
 
     asm volatile("MOV X16, %0" :: "r" (DrawTraceRadarSprite_BackTo));
     asm volatile("BR X16");
