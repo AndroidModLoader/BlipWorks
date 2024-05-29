@@ -44,27 +44,27 @@ uint32_t *m_snTimeInMillisecondsPauseMode, *timeNextDrawStart;
 // Own Funcs
 inline void SetMapBlipsScale(float scale)
 {
-    #ifdef AML32
+  #ifdef AML32
     *(float*)(pGTASA + 0x43F990) = 0.1f * scale;
-    #else
+  #else
     mapBlipsScale = 0.1f * scale;
-    #endif
+  #endif
 }
 inline void SetRotatingBlipsScale(float scale)
 {
-    #ifdef AML32
+  #ifdef AML32
     *(float*)(pGTASA + 0x441328) = 0.1f * scale;
-    #else
+  #else
     rotatingBlipsScale = 0.1f * scale;
-    #endif
+  #endif
 }
 inline void SetTraceBlipsScale(float scale)
 {
-    #ifdef AML32
+  #ifdef AML32
     *(float*)(pGTASA + 0x441A04) = 0.01f * scale;
-    #else
+  #else
     tracerBlipsScale = 0.01f * scale;
-    #endif
+  #endif
 }
 inline void ShowUnrevealedBlips(bool show)
 {
@@ -138,7 +138,7 @@ __attribute__((optnone)) __attribute__((naked)) void DrawYAH_Inject(void)
 }
 __attribute__((optnone)) __attribute__((naked)) void DrawRadarSprite_Inject(void)
 {
-    asm volatile("LDR S0, [X21,#0x2C]\nLDR S1, [X21,#0x34]");
+    asm volatile("LDR S0, [X21, #0x2C]\nLDR S1, [X21, #0x34]");
     asm volatile("FMOV S2, %w0" :: "r" (mapBlipsScale));
 
     asm volatile("MOV X16, %0" :: "r" (DrawRadarSprite_BackTo));
@@ -155,7 +155,7 @@ __attribute__((optnone)) __attribute__((naked)) void DrawRotRadarSprite_Inject(v
 }
 __attribute__((optnone)) __attribute__((naked)) void DrawTraceRadarSprite_Inject(void)
 {
-    asm volatile("LDP S0, S1, [X8,#0x2C]\nLDP S2, S3, [X8,#0x34]");
+    asm volatile("LDP S0, S1, [X8, #0x2C]\nLDP S2, S3, [X8, #0x34]");
     asm volatile("FMOV S4, %w0" :: "r" (tracerBlipsScale));
 
     asm volatile("MOV X16, %0" :: "r" (DrawTraceRadarSprite_BackTo));
@@ -221,7 +221,7 @@ extern "C" void OnModLoad()
     pCfgYAHShowTime = cfg->Bind("YouAreHereShowTime", 500); yahShowTime = pCfgYAHShowTime->GetInt();
     pCfgYAHHideTime = cfg->Bind("YouAreHereHideTime", 200); yahHideTime = pCfgYAHHideTime->GetInt();
     
-    #ifdef AML32
+  #ifdef AML32
     aml->Unprot(pGTASA + 0x43F990, sizeof(float));
     aml->Unprot(pGTASA + 0x441328, sizeof(float));
     aml->Unprot(pGTASA + 0x441A04, sizeof(float));
@@ -230,7 +230,7 @@ extern "C" void OnModLoad()
     aml->Redirect(pGTASA + 0x440F6E + 0x1, (uintptr_t)DrawYAH_Inject);
     aml->Write(pGTASA + 0x440F8A, (uintptr_t)"\x00\xBF\xA3\x42", 4);
     aml->Write(pGTASA + 0x440FA0, (uintptr_t)"\xBB\x42", 2);
-    #else
+  #else
     aml->Redirect(pGTASA + 0x524CB4, (uintptr_t)DrawRadarSprite_Inject); DrawRadarSprite_BackTo = pGTASA + 0x524CC4;
     aml->Redirect(pGTASA + 0x5264CC, (uintptr_t)DrawRotRadarSprite_Inject); DrawRotRadarSprite_BackTo = pGTASA + 0x5264DC;
     aml->Redirect(pGTASA + 0x526A24, (uintptr_t)DrawTraceRadarSprite_Inject); DrawTraceRadarSprite_BackTo = pGTASA + 0x526A34;
@@ -239,15 +239,15 @@ extern "C" void OnModLoad()
     aml->Redirect(pGTASA + 0x5262B4, (uintptr_t)DrawYAH_Inject);
     aml->Write(pGTASA + 0x5262E0, (uintptr_t)"\x7F\x01\x0E\x6B", 4);
     aml->Write(pGTASA + 0x5262F4, (uintptr_t)"\x7F\x01\x0D\x6B", 4);
-    #endif
+  #endif
 
     SET_TO(bDrawYouAreHere, pGTASA + BYVER(0x6AE3C8, 0x889CA0));
     SET_TO(timeNextDrawStart, pGTASA + BYVER(0x994EF0, 0xC2486C));
     SET_TO(m_snTimeInMillisecondsPauseMode, aml->GetSym(hGTASA, "_ZN6CTimer31m_snTimeInMillisecondsPauseModeE"));
-    #ifdef AML64
-        bDrawYouAreHere_Paged = PAGED_ADDRESS(bDrawYouAreHere);
-        timeNextDrawStart_Paged = PAGED_ADDRESS(timeNextDrawStart);
-    #endif
+  #ifdef AML64
+    bDrawYouAreHere_Paged = PAGED_ADDRESS(bDrawYouAreHere);
+    timeNextDrawStart_Paged = PAGED_ADDRESS(timeNextDrawStart);
+  #endif
     
     SetMapBlipsScale(pCfgMapBlipScale->GetFloat());
     SetRotatingBlipsScale(pCfgRotBlipScale->GetFloat());
@@ -260,10 +260,10 @@ extern "C" void OnModLoad()
     {
         eTypeOfSettings settingTab = sautils->AddSettingsTab("BlipWorks");
 
-#ifdef AML64
+      #ifdef AML64
         // A fix for accidental glitch introduced in 1.5.1 for 64-bit version... damn.
         if(!aml->HasModOfBiggerVersion("net.rusjj.gtasa.utils", "1.5.1")) *(unsigned char*)&settingTab += 1;
-#endif
+      #endif
 
         sautils->AddSliderItem(settingTab, "Radar Icon Scale", (int)(pCfgMapBlipScale->GetFloat() * 100), 10, 200, BSChanged1, SettingGetTextFormatted);
         sautils->AddSliderItem(settingTab, "Rotating Icon Scale", (int)(pCfgRotBlipScale->GetFloat() * 100), 10, 200, BSChanged2, SettingGetTextFormatted);
