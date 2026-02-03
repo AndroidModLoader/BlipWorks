@@ -14,7 +14,7 @@ ISAUtils* sautils = nullptr;
 #endif
 #define sizeofA(__aVar)  ((int)(sizeof(__aVar)/sizeof(__aVar[0])))
 
-MYMODCFG(net.rusjj.blipworks, BlipWorks, 1.3, RusJJ)
+MYMODCFG(net.rusjj.blipworks, BlipWorks, 1.3.1, RusJJ)
 NEEDGAME(com.rockstargames.gtasa)
 
 // Savings
@@ -173,13 +173,13 @@ void BSChanged1(int oldVal, int newVal, void* data)
 }
 void BSChanged2(int oldVal, int newVal, void* data)
 {
-    pCfgMapBlipScale->SetFloat(0.01f * newVal);
+    pCfgRotBlipScale->SetFloat(0.01f * newVal);
     SetRotatingBlipsScale(0.01f * newVal);
     cfg->Save();
 }
 void BSChanged3(int oldVal, int newVal, void* data)
 {
-    pCfgMapBlipScale->SetFloat(0.01f * newVal);
+    pCfgTraceBlipScale->SetFloat(0.01f * newVal);
     SetTraceBlipsScale(0.01f * newVal);
     cfg->Save();
 }
@@ -207,11 +207,11 @@ const char* pYesNo[] =
     "FEM_OFF",
     "FEM_ON",
 };
-extern "C" void OnModLoad()
+ON_MOD_LOAD()
 {
     logger->SetTag("BlipWorks");
     pGTASA = aml->GetLib("libGTASA.so");
-    hGTASA = dlopen("libGTASA.so", RTLD_LAZY);
+    hGTASA = aml->GetLibHandle("libGTASA.so");
     
     pCfgMapBlipScale = cfg->Bind("MapBlipScale", 0.7f);
     pCfgRotBlipScale = cfg->Bind("RotatingBlipScale", 0.8f);
