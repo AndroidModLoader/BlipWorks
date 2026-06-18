@@ -6,10 +6,7 @@
 #include "isautils.h"
 ISAUtils* sautils = nullptr;
 
-#ifdef AML32
-    #define BYVER(__for32, __for64) (__for32)
-#else
-    #define BYVER(__for32, __for64) (__for64)
+#ifdef AML64
     #define PAGED_ADDRESS(__addr) ((uintptr_t)__addr & 0xFFFFFFFFFFFFF000)
 #endif
 #define sizeofA(__aVar)  ((int)(sizeof(__aVar)/sizeof(__aVar[0])))
@@ -70,24 +67,24 @@ inline void ShowUnrevealedBlips(bool show)
 {
     if(show)
     {
-        aml->PlaceB(pGTASA + BYVER(0x43FD0A + 0x1, 0x52512C), pGTASA + BYVER(0x43FD30 + 0x1, 0x525164));
-        aml->PlaceB(pGTASA + BYVER(0x440710 + 0x1, 0x525B90), pGTASA + BYVER(0x440734 + 0x1, 0x525BCC));
+        aml->PlaceB(pGTASA + BYBIT(0x43FD0A + 0x1, 0x52512C), pGTASA + BYBIT(0x43FD30 + 0x1, 0x525164));
+        aml->PlaceB(pGTASA + BYBIT(0x440710 + 0x1, 0x525B90), pGTASA + BYBIT(0x440734 + 0x1, 0x525BCC));
     }
     else
     {
-        aml->Write(pGTASA + BYVER(0x43FD0A, 0x52512C), BYVER("\x13\xD0\x6B\x48", "\xC8\x01\x00\x34"), 4);
-        aml->Write(pGTASA + BYVER(0x440710, 0x525B90), BYVER("\xDF\xF8\xD0\x17", "\xE9\x01\x00\x34"), 4);
+        aml->Write(pGTASA + BYBIT(0x43FD0A, 0x52512C), BYBIT("\x13\xD0\x6B\x48", "\xC8\x01\x00\x34"), 4);
+        aml->Write(pGTASA + BYBIT(0x440710, 0x525B90), BYBIT("\xDF\xF8\xD0\x17", "\xE9\x01\x00\x34"), 4);
     }
 }
 inline void HideNorthBlip(bool hide)
 {
     if(hide)
     {
-        aml->PlaceB(pGTASA + BYVER(0x43EB9A + 0x1, 0x5240B4), pGTASA + BYVER(0x43EBAA + 0x1, 0x5240C8));
+        aml->PlaceB(pGTASA + BYBIT(0x43EB9A + 0x1, 0x5240B4), pGTASA + BYBIT(0x43EBAA + 0x1, 0x5240C8));
     }
     else
     {
-        aml->Write(pGTASA + BYVER(0x43EB9A, 0x5240B4), BYVER("\x18\xEE\x10\x1A", "\xE1\x03\x40\xB9"), 4);
+        aml->Write(pGTASA + BYBIT(0x43EB9A, 0x5240B4), BYBIT("\x18\xEE\x10\x1A", "\xE1\x03\x40\xB9"), 4);
     }
 }
 
@@ -241,8 +238,8 @@ ON_MOD_LOAD()
     aml->Write(pGTASA + 0x5262F4, (uintptr_t)"\x7F\x01\x0D\x6B", 4);
   #endif
 
-    SET_TO(bDrawYouAreHere, pGTASA + BYVER(0x6AE3C8, 0x889CA0));
-    SET_TO(timeNextDrawStart, pGTASA + BYVER(0x994EF0, 0xC2486C));
+    SET_TO(bDrawYouAreHere, pGTASA + BYBIT(0x6AE3C8, 0x889CA0));
+    SET_TO(timeNextDrawStart, pGTASA + BYBIT(0x994EF0, 0xC2486C));
     SET_TO(m_snTimeInMillisecondsPauseMode, aml->GetSym(hGTASA, "_ZN6CTimer31m_snTimeInMillisecondsPauseModeE"));
   #ifdef AML64
     bDrawYouAreHere_Paged = PAGED_ADDRESS(bDrawYouAreHere);
